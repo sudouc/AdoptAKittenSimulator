@@ -1,0 +1,2 @@
+# AdoptAKittenSimulator
+So this was started out as a joke where I was messing a round in javascript but then I got pretty addicted to making it. Its a game where you have to adopt kittens to get love, but avoid becoming crazy from having too many kats (yes with a K.). Its riddled with badly written code, little comments, and has almost 0 front end, if anyone wants to help turn this weird thing into a proper way to kill time feel free to join me. :3
