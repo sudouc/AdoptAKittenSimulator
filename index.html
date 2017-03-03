@@ -1,0 +1,351 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Get all the kats</title>
+</head>
+
+<body>
+
+<h1>Adopt a Kitten Simulator</h1>
+
+<h2>Money :</h2>
+<h2 id="money">$ 0</h2>
+<h2>Kats :</h2>
+<h2 id="cats">:3 0</h2>
+
+<div>
+<button id="catbuy" onclick="adoptACat()">Adopt a kat</button>
+<button id="houseBuy" onclick="buyHouse()">Upgrade to a Caravan : $100</button>
+</div>
+
+<div>
+<button id="workclick" onclick="work()">Work</button>
+<button id="play" onclick="play()">Play With Kats</button>
+</div>
+
+<div class="lv1">
+	<button id="power" onclick="togglePower()">Disable Power</button>
+	<button id="water" onclick="toggleWater()">Disable Water</button>
+	<button id="food" onclick="toggleFood()">Disable Food</button>
+</div>
+
+<div class="lv2">
+	<button id="toggleCat" onclick="toggleCatGet()">Attract kats: :3 1 per 10s</button>
+	<button id="moneyCat" onclick="getMoney()">Monetize kats: $100</button>
+</div>
+
+<div class="lv3">
+	<button id="catGive" onclick="catGive()">Donate a kat to hospital</button>
+	<button id="upCatGet" onclick="upCatGet()">Attract more kats per second : $1000</button>
+</div>
+
+<button onclick="toggleJob()">Quit Your Job</button>
+
+<p>Love</p>
+<div class="container">
+  <div class="love" id="love"><3</div>
+</div>
+
+<p>Madness</p>
+<div class="container">
+  <div class="madness" id="madness">Madness</div>
+</div>
+
+<p id="housy">Housing</p>
+<div class="container">
+  <div class="housing" id="housing">Housing: 0/5</div>
+</div>
+
+<script>
+//Money variables
+var money = 100000;
+
+//Cat Variables
+var cats = 0;
+var catCost = 10;
+var catInc = 5;
+var catScore = 0.2;
+var catGet = 0;
+var catGetPrice = 1000;
+var catValue = 1;
+var catValuePrice = 100;
+var catGetTimer = 1;
+
+//Work Variables
+var pay = 4;
+var payRaiseCounter = 0;
+var payRaiseMilestone = 20;
+
+//Misc Variables
+var refreshRate = 1000;
+
+//Love Variables
+var love = 1;
+var loveCap = 100;
+var loveLevel = 0;
+
+//Madness Variables
+var madness = 1;
+
+//Housing Variables
+var housingLv = 0;
+var housingMax = 5;
+var housingPrice = [100,750,2500,10000,500000,1000000,100000000]
+var housingCapacity=[5,12,25,75,250,1500,5000,100000]
+var housingName=["Caravan","Share House","House","Mansion","Zoo","Mental Asylum","Cardboard Box"]
+
+//Utility Variables;
+var water = 3;
+var power = 2;
+var food = 1;
+
+//Job Variables
+var job = 1;
+var begTotal = 20;
+var begCount = 0;
+
+var loveBar = document.getElementById("love");
+var madnessBar = document.getElementById("madness");
+var housingBar = document.getElementById("housing");
+
+loveBar.style.width = love/loveCap*100 + "%";
+madnessBar.style.width = madness + "%";
+housingBar.style.width = cats/housingMax*100 + "%";
+	
+document.getElementById("catbuy").innerHTML = "Adopt a kat: $" + catCost;
+document.getElementById("workclick").innerHTML = "Work: $" + pay;
+document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;
+		
+function adoptACat() {
+	cats += 1;
+	money -= catCost;
+	catCost += catInc;
+	document.getElementById("cats").innerHTML = ":3 " + cats;
+	document.getElementById("money").innerHTML = "$ " + money;
+	document.getElementById("catbuy").innerHTML = "Adopt a kat: $" + catCost;
+	love += 5;
+	loveBar.style.width = love/loveCap*100 + "%";
+	if(cats<=housingMax){
+		housingBar.style.width = cats/housingMax*100 + "%";
+		document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;
+	}
+	else{
+		document.getElementById("housing").innerHTML = "Housing is over capacity!: " + cats + "/" + housingMax;
+	}
+	if(love > loveCap){
+		loveCap += 50;
+		love = 1;
+		loveLevel += 1;
+		loveBar.style.width = love/loveCap*100 + "%";
+	}
+}
+
+function work() {
+	
+	if(job == 0){
+		begCount += 1;
+		if(begCount >= begTotal){
+			job = 1;
+			begCount = 0;
+			begTotal = 20;
+			document.getElementById("workclick").innerHTML = "Work: $" + pay;
+		}
+	}
+	else{
+		money += pay;
+		document.getElementById("money").innerHTML = "$ " + money;
+		// $("#money").html()
+		if(payRaiseCounter < payRaiseMilestone){
+			payRaiseCounter += 1;
+		} 
+		else{
+			payRaiseMilestone += 10;
+			payRaiseCounter = 0;
+			pay += Math.round(pay/3);
+		}
+		document.getElementById("workclick").innerHTML = "Work: $" + pay;
+	}
+}
+
+window.setInterval(function myFunction() {
+	money -= cats * (power+water+food)
+	document.getElementById("money").innerHTML = "$ " + money;
+	if(catGet == 1){
+		if(catGetTimer => 10){
+			cats += catValue;
+			document.getElementById("cats").innerHTML = ":3 " + cats;
+			catGetTimer = 1;
+			if(cats<=housingMax){
+				housingBar.style.width = cats/housingMax*100 + "%";
+				document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;
+			}
+			else{
+				document.getElementById("housing").innerHTML = "Housing is over capacity!: " + cats + "/" + housingMax;
+			}
+		}
+		else{
+			catGetTimer += 1;
+		}
+	}
+	//Things that make player go crazy
+	if(cats > 0){
+		money += catValue;
+		document.getElementById("money").innerHTML = "$ " + money;
+		if(power == 0){
+			madness += 0.5;
+		}
+		if(water == 0){
+			madness += 1;
+		}
+		if(food == 0){
+			madness += 1.5;
+		}
+		if(money < 0 || cats > housingMax){
+			madness += madness/15;
+		}
+		madnessBar.style.width = madness + "%";
+		if(madness >= 100){
+			cats = 0;
+			madness = 10
+			document.getElementById("cats").innerHTML = ":3 " + cats;
+			housingBar.style.width = cats + "%";
+			document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;
+			alert("Your living conditions have become so disgusting that animal control has come and taken all of your kats. Its probaby for the best...")
+			madnessBar.style.width = madness + "%";
+		}
+	}
+	if(love > loveCap){
+		loveCap += 50;
+		love = 1;
+		loveLevel += 1;
+		loveBar.style.width = love/loveCap*100 + "%";
+	}
+}, refreshRate);
+
+function togglePower() {
+	if(power == 0){
+		power = 3;
+		document.getElementById("power").innerHTML = "Disable Power"
+	}
+	else{
+		power = 0;
+		document.getElementById("power").innerHTML = "Enable Power"
+	}
+}
+
+function toggleWater() {
+	if(water == 0){
+		water = 2;
+		document.getElementById("water").innerHTML = "Disable Water"
+	}
+	else{
+		water = 0;
+		document.getElementById("water").innerHTML = "Enable Water"
+	}
+}
+
+function toggleFood() {
+	if(food == 0){
+		food = 1;
+		document.getElementById("food").innerHTML = "Disable Food"
+	}
+	else{
+		food = 0;
+		document.getElementById("food").innerHTML = "Enable Food"
+	}
+}
+
+function toggleJob() {
+	if(job == 1){
+		job = 0;
+		document.getElementById("workclick").innerHTML = "Beg for your job back";
+	}
+}
+
+function play() {
+	if(job == 0){
+		love = love + cats * catScore * 15;
+	}
+	else{
+		love = love + cats * catScore;
+	}
+	love = love + cats * catScore;
+	if(love > loveCap){
+		loveCap += 50;
+		love = 1;
+		loveLevel += 1;
+	}
+	loveBar.style.width = love/loveCap*100 + "%";
+}
+
+function buyHouse() {
+	if(money >= housingPrice[housingLv]){
+		money -= housingPrice[housingLv];
+		housingLv += 1;
+		housingMax = housingCapacity[housingLv];
+		document.getElementById("money").innerHTML = "$ " + money;
+		housingBar.style.width = cats + "%";
+		document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;		
+		document.getElementById("houseBuy").innerHTML = "Upgrade to a " + housingName[housingLv] + " : $" + housingPrice[housingLv];		
+	}
+}
+
+function toggleCatGet() {
+	if(catGet == 0){
+		catGet = 1;
+		document.getElementById("toggleCat").innerHTML = "Stop Attracting kats: :3 " + catValue +" per 10s";
+	}
+	else{
+		catGet = 0;
+		document.getElementById("toggleCat").innerHTML = "Attract kats: :3 " + catValue + " per 10s";
+	}
+}
+
+function getMoney() {
+	if(money > catValuePrice){
+		catValue = catValue + catValue;
+		money -= catValuePrice;
+		catValuePrice = catValuePrice * 3;
+		document.getElementById("moneyCat").innerHTML = "Monetize kats: $" + catValuePrice;
+		document.getElementById("workclick").innerHTML = "Work: $" + pay;
+		document.getElementById("money").innerHTML = "$ " + money;
+	}
+}
+
+function catGive() {
+	if(cats > 0){
+		cats -= 1;
+		madness -= 10;
+		love -= 20;
+		document.getElementById("cats").innerHTML = ":3 " + cats;
+		loveBar.style.width = love/loveCap*100 + "%";
+		madnessBar.style.width = madness + "%";
+		housingBar.style.width = cats/housingMax*100 + "%";
+		document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;
+		if(madness < 1){
+			madness = 1;
+		}
+	}
+}
+
+function upCatGet() {
+	if(money >= catGetPrice){
+		money -= catGetPrice;
+		catGetPrice + 1000;
+		catValue += catValue;
+		document.getElementById("upCatGet").innerHTML = "Attract more kats per second : $" + catGetPrice;
+		document.getElementById("workclick").innerHTML = "Work: $" + pay;
+		document.getElementById("money").innerHTML = "$ " + money;
+	
+		if(catGet == 0){
+			document.getElementById("toggleCat").innerHTML = "Attract kats: :3 " + catValue + " per 10s";		
+		}
+		else{
+			document.getElementById("toggleCat").innerHTML = "Stop Attracting kats: :3 " + catValue +" per 10s";
+		}
+	}
+}
+
+</script>
+</body>
+</html>
