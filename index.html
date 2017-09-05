@@ -24,18 +24,18 @@
 <button id="play" onclick="play()">Play With Kats</button>
 </div>
 
-<div class="lv1">
+<div id="1v1" class="lv1">
 	<button id="power" onclick="togglePower()">Disable Power</button>
 	<button id="water" onclick="toggleWater()">Disable Water</button>
 	<button id="food" onclick="toggleFood()">Disable Food</button>
 </div>
 
-<div class="lv2">
+<div id="1v2" class="lv2">
 	<button id="toggleCat" onclick="toggleCatGet()">Attract kats: :3 1 per 10s</button>
 	<button id="moneyCat" onclick="getMoney()">Monetize kats: $100</button>
 </div>
 
-<div class="lv3">
+<div id="1v3" class="lv3">
 	<button id="catGive" onclick="catGive()">Donate a kat to hospital</button>
 	<button id="upCatGet" onclick="upCatGet()">Attract more kats per second : $1000</button>
 </div>
@@ -59,7 +59,7 @@
 
 <script>
 //Money variables
-var money = 0;
+var money = 10000000000000000;
 //Test comment
 //Cat Variables
 var cats = 0;
@@ -91,9 +91,9 @@ var madness = 1;
 //Housing Variables
 var housingLv = 0;
 var housingMax = 5;
-var housingPrice = [100,750,2500,10000,500000,1000000,100000000]
+var housingPrice = [100,750,2500,10000,500000,1000000,100000000,1]
 var housingCapacity=[5,12,25,75,250,1500,5000,100000]
-var housingName=["Caravan","Share House","House","Mansion","Zoo","Mental Asylum","Cardboard Box"]
+var housingName=["Caravan","Share House","House","Mansion","Zoo","Mental Asylum","Cardboard Box","Be Reborn a Cat"]
 
 //Utility Variables;
 var water = 3;
@@ -112,11 +112,113 @@ var housingBar = document.getElementById("housing");
 loveBar.style.width = love/loveCap*100 + "%";
 madnessBar.style.width = madness + "%";
 housingBar.style.width = cats/housingMax*100 + "%";
-	
+
+document.getElementById("power").style.display= "none";
+document.getElementById("water").style.display= "none";
+document.getElementById("food").style.display= "none";
+document.getElementById("toggleCat").style.display= "none";
+document.getElementById("moneyCat").style.display= "none";
+document.getElementById("catGive").style.display= "none";
+document.getElementById("upCatGet").style.display= "none";
+
 document.getElementById("catbuy").innerHTML = "Adopt a kat: $" + catCost;
 document.getElementById("workclick").innerHTML = "Work: $" + pay;
 document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;
-		
+document.getElementById("cats").innerHTML = ":3 " + cats;
+document.getElementById("money").innerHTML = "$ " + money;
+document.getElementById("catbuy").innerHTML = "Adopt a kat: $" + catCost
+
+function startGame(){
+	//Money variables
+	money = 0;
+	//Test comment
+	//Cat Variables
+	cats = 0;
+	catCost = 10;
+	catInc = 5;
+	catScore = 0.2;
+	catGet = 0;
+	catGetPrice = 1000;
+	catValue = 1;
+	catValuePrice = 100;
+	catGetTimer = 1;
+
+	//Work Variables
+	pay = 4;
+	payRaiseCounter = 0;
+	payRaiseMilestone = 20;
+
+	//Misc Variables
+	refreshRate = 1000;
+
+	//Love Variables
+	love = 1;
+	loveCap = 100;
+	loveLevel = 0;
+
+	//Madness Variables
+	madness = 1;
+
+	//Housing Variables
+	housingLv = 0;
+	housingMax = 5;
+
+	//Utility Variables;
+	water = 3;
+	power = 2;
+	food = 1;
+
+	//Job Variables
+	job = 1;
+	begTotal = 20;
+	begCount = 0;
+
+	loveBar = document.getElementById("love");
+	madnessBar = document.getElementById("madness");
+	housingBar = document.getElementById("housing");
+
+	loveBar.style.width = love/loveCap*100 + "%";
+	madnessBar.style.width = madness + "%";
+	housingBar.style.width = cats/housingMax*100 + "%";
+
+	document.getElementById("power").style.display= "none";
+	document.getElementById("water").style.display= "none";
+	document.getElementById("food").style.display= "none";
+	document.getElementById("toggleCat").style.display= "none";
+	document.getElementById("moneyCat").style.display= "none";
+	document.getElementById("catGive").style.display= "none";
+	document.getElementById("upCatGet").style.display= "none";
+
+	document.getElementById("catbuy").innerHTML = "Adopt a kat: $" + catCost;
+	document.getElementById("workclick").innerHTML = "Work: $" + pay;
+	document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;
+	document.getElementById("cats").innerHTML = ":3 " + cats;
+	document.getElementById("money").innerHTML = "$ " + money;
+	document.getElementById("catbuy").innerHTML = "Adopt a kat: $" + catCost
+}
+function upLove(){
+	loveCap += 50;
+		love = 1;
+		loveLevel += 1;
+		if(loveLevel == 1){
+			document.getElementById("power").style.display= "initial";
+		}
+		 else if(loveLevel == 2){
+			document.getElementById("water").style.display= "initial";
+		} else if(loveLevel == 3){
+			document.getElementById("food").style.display= "initial";
+		} else if(loveLevel == 4){
+			document.getElementById("toggleCat").style.display= "initial";
+		} else if(loveLevel == 5){
+			document.getElementById("moneyCat").style.display= "initial";
+		} else if(loveLevel == 6){
+			document.getElementById("catGive").style.display= "initial";
+		} else if(loveLevel == 7){
+			document.getElementById("upCatGet").style.display= "initial";
+		}
+		loveBar.style.width = love/loveCap*100 + "%";		
+}
+
 function adoptACat() {
 	cats += 1;
 	money -= catCost;
@@ -134,10 +236,7 @@ function adoptACat() {
 		document.getElementById("housing").innerHTML = "Housing is over capacity!: " + cats + "/" + housingMax;
 	}
 	if(love > loveCap){
-		loveCap += 50;
-		love = 1;
-		loveLevel += 1;
-		loveBar.style.width = love/loveCap*100 + "%";
+		upLove();
 	}
 }
 
@@ -216,10 +315,7 @@ window.setInterval(function myFunction() {
 		}
 	}
 	if(love > loveCap){
-		loveCap += 50;
-		love = 1;
-		loveLevel += 1;
-		loveBar.style.width = love/loveCap*100 + "%";
+		upLove();	
 	}
 }, refreshRate);
 
@@ -272,9 +368,7 @@ function play() {
 	}
 	love = love + cats * catScore;
 	if(love > loveCap){
-		loveCap += 50;
-		love = 1;
-		loveLevel += 1;
+		upLove();	
 	}
 	loveBar.style.width = love/loveCap*100 + "%";
 }
@@ -283,11 +377,14 @@ function buyHouse() {
 	if(money >= housingPrice[housingLv]){
 		money -= housingPrice[housingLv];
 		housingLv += 1;
+		if(housingLv == 8){
+			startGame();
+		}
 		housingMax = housingCapacity[housingLv];
 		document.getElementById("money").innerHTML = "$ " + money;
 		housingBar.style.width = cats + "%";
 		document.getElementById("housing").innerHTML = "Housing: " + cats + "/" + housingMax;		
-		document.getElementById("houseBuy").innerHTML = "Upgrade to a " + housingName[housingLv] + " : $" + housingPrice[housingLv];		
+		document.getElementById("houseBuy").innerHTML = "Upgrade to a " + housingName[housingLv] + " : $" + housingPrice[housingLv];	
 	}
 }
 
